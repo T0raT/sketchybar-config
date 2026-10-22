@@ -14,9 +14,9 @@ focused="${FOCUSED_WORKSPACE:-$(aerospace list-workspaces --focused)}"
 args=()
 for sid in "$@"; do
   if [[ "$sid" == "$focused" ]]; then
-    args+=(--set "space.$sid" background.drawing=on label.color="$BLACK")
+    args+=(--set $NAME background.drawing=on label.color="$BLACK")
   else
-    args+=(--set "space.$sid" background.drawing=off label.color="$PAYAYA_WHIP")
+    args+=(--set $NAME background.drawing=off label.color="$PAYAYA_WHIP")
   fi
 done
 
