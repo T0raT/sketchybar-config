@@ -1,9 +1,23 @@
 #!/usr/bin/env zsh
 
-if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
-  sketchybar --set $NAME label.color=0xff000000
-  sketchybar --set $NAME background.drawing=on
-else
-  sketchybar --set $NAME label.color=0xffffffff
-  sketchybar --set $NAME background.drawing=off
-fi
+source "$CONFIG_DIR/colors.sh"
+
+# FOCUSED_WORKSPACE is only exported when the event fires. You can confirm this directly in aerospace.toml, when sketchybar is called with the variable exported.
+#
+# But on first startup, there is no workspace change event being fired, so the fallback just asks aerospace which space is focused rightnow.
+#
+# This one goes to claude btw, because my dumbo ass is not familiar with bash/zsh.
+#
+# I think the rest is fairly self explanatory
+focused="${FOCUSED_WORKSPACE:-$(aerospace list-workspaces --focused)}"
+
+args=()
+for sid in "$@"; do
+  if [[ "$sid" == "$focused" ]]; then
+    args+=(--set "space.$sid" background.drawing=on label.color="$BLACK")
+  else
+    args+=(--set "space.$sid" background.drawing=off label.color="$PAYAYA_WHIP")
+  fi
+done
+
+sketchybar "${args[@]}"
